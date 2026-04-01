@@ -1,0 +1,15 @@
+.btn-primary {
+  background-color: #dc0909;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:active {
+    background-color: #c90909;
+    transform: scale(1.1) ;
+  }
+  
+}
