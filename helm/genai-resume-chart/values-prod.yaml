@@ -1,0 +1,17 @@
+# Production Overrides
+backend:
+  replicaCount: 3
+  image:
+    tag: v1.0.0
+    pullPolicy: Always
+  env:
+    NODE_ENV: "production"
+
+frontend:
+  replicaCount: 3
+  image:
+    tag: v1.0.0
+    pullPolicy: Always
+
+mongodb:
+  replicaCount: 2

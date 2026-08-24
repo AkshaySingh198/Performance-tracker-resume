@@ -1,0 +1,113 @@
+name: ci-pipeline-genai-resume
+on :
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+    # job1 for lint and code quality
+jobs:
+  code-quality:
+    name: code-quality& ESLint
+    runs-on: ubuntu-latest
+    steps: 
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: node.js install
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          
+      - name: install & lint frontend
+        run: |
+          cd Frontend
+          npm ci
+          npm run lint
+  
+  # job 2 sonar-Qube and seqarity scan
+  sonar-qube-scan: 
+     name: sonarqube scan & sequrity
+     runs-on: ubuntu-latest
+     needs: code-quality
+     steps:
+       - name: checkout code
+         uses: actions/checkout@v4
+         with: 
+          fetch-depth: 0
+       - name: sonar cloud scan
+         uses: SonarSource/sonarcloud-github-action@master
+         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # job 3 build and push immages to dockerhub 
+  build-push: 
+    name: build & push image to docker-hub 
+    runs-on: ubuntu-latest
+    needs: sonar-qube-scan
+    steps:
+      - name: checkout-code
+        uses: actions/checkout@v4
+
+      - name: login docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: buildx docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: backend build
+        uses:  docker/build-push-action@v5
+        with:
+          context: ./Backend
+          file:  ./Backend/Dockerfile
+          load: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-backend:latest
+
+      - name: trivy for CVS
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-backend:latest'
+          format: 'table'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH'
+
+      - name: push the build image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Backend
+          file: ./Backend/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-backend:${{ github.sha }}
+
+  # Build Frontend Image
+      - name: Build Frontend Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Frontend
+          file: ./Frontend/Dockerfile
+          load: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-frontend:latest
+      # Run Trivy Vulnerability Scan on Frontend Image
+      - name: Trivy Scan Frontend Image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-frontend:latest'
+          format: 'table'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH'
+      # Push Frontend Image to Docker Hub
+      - name: Push Frontend Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Frontend
+          file: ./Frontend/Dockerfile
+          #  for making building load:true and for pushing push:true
+          push: true 
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/genai-resume-frontend:${{ github.sha }}

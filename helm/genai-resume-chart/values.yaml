@@ -1,0 +1,70 @@
+# Global settings
+global:
+  namespace: resume
+
+# MongoDB Configuration
+mongodb:
+  enabled: true
+  image:
+    repository: mongo
+    tag: "7.0"
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    name: service-mongo
+    port: 27017
+  persistence:
+    storage: 5Gi
+    mountPath: /data/db
+
+# Backend Configuration
+backend:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: genai-resume-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    name: backend-service
+    port: 3000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    PORT: "3000"
+    NODE_ENV: "development"
+    MONGO_URI: "mongodb://service-mongo:27017/interview-master"
+  secret:
+    JWT_SECRET: "a3241fddc7f43ecf0c63fe7376cb7991f032a8b3c813eba231de4beb2e0166de"
+    GOOGLE_GENAI_API_KEY: "AIzaSyDRZW6ESr0X0sgSzljw63mm4ChFHFyPNMg"
+
+# Frontend Configuration
+frontend:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: genai-resume-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    name: frontend-service
+    port: 80
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Ingress Configuration
+ingress:
+  enabled: true
+  name: ingress-resume
+  host: resume-analyzer.com
+  className: nginx

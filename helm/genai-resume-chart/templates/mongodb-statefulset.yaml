@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset-mongo
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: {{ .Values.mongodb.service.name }}
+  replicas: {{ .Values.mongodb.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: resume-mongo
+        image: "{{ .Values.mongodb.image.repository }}:{{ .Values.mongodb.image.tag }}"
+        imagePullPolicy: {{ .Values.mongodb.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.mongodb.service.port }}
+          name: mongo
+        volumeMounts:
+        - name: mongo-data
+          mountPath: {{ .Values.mongodb.persistence.mountPath }}
+      volumes:
+      - name: mongo-data
+        persistentVolumeClaim:
+          claimName: mongo-pvc

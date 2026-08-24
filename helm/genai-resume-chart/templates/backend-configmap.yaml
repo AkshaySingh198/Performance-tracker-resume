@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  PORT: "{{ .Values.backend.env.PORT }}"
+  NODE_ENV: "{{ .Values.backend.env.NODE_ENV }}"
+  MONGO_URI: "{{ .Values.backend.env.MONGO_URI }}"

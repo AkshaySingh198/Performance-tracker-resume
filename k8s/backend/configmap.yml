@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: resume
+data:
+  PORT: "3000"
+  NODE_ENV: "production"
+  MONGO_URI: "mongodb://service-mongo:27017/interview-master"
