@@ -16,7 +16,7 @@ export const useAuth=()=>{
         setUser(data.user)
         }
         catch(err){
-            
+            console.log(err)
         }finally{setLoading(false)}
         
     }
@@ -36,7 +36,7 @@ export const useAuth=()=>{
     const handleLogout=async()=>{
         setLoading(true)
         try{
-             const data= await logout()
+        await logout()
         setUser(null)
 
         }
@@ -53,7 +53,9 @@ export const useAuth=()=>{
         const data= await getMe()
         setUser(data.user);
         }
-        catch(err){ } finally{
+        catch(err){
+            console.log(err)
+        } finally{
         setLoading(false)
         }
     }

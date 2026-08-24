@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router'
 import { useAuth } from '../hook/userAuth'
 import { useState } from 'react'
 
-const login = () => {
+const Login = () => {
 const navigate=useNavigate();
 
 const {loading,handleLogin}=useAuth();
@@ -59,4 +59,4 @@ const [password, setpassword] = useState("")
   )
 }
 
-export default login
+export default Login
