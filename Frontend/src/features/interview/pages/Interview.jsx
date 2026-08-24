@@ -83,6 +83,7 @@ const navigate=useNavigate();
         if (interviewId) {
             getReportById(interviewId)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ interviewId ])
 
 

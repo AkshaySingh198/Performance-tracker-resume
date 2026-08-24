@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router';
 import { useAuth } from '../hook/userAuth';
 
-const register = () => {
+const Register = () => {
 
     const navigate=useNavigate();
     const [username, setusername] = useState("")
@@ -74,4 +74,4 @@ const register = () => {
   )
 }
 
-export default register
+export default Register

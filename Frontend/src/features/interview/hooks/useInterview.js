@@ -87,6 +87,7 @@ export const useInterview = () => {
         } else {
             getReports()
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ interviewId ])
 
     return { loading, report, reports, generateReport, getReportById, getReports, getResumePdf }
