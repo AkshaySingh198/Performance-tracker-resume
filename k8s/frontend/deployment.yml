@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: resume-frontend
-        image: genai-resume-frontend:latest
-        imagePullPolicy: IfNotPresent
+        image: akshaysingh198/genai-resume-frontend:latest
+        imagePullPolicy: Always
         resources:
           requests:
             memory: "256Mi"
