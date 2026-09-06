@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: genai-resume-app
+  namespace: argocd
+spec:
+  project: default
+  
+  # Source: Points to your GitHub repository and Helm Chart directory
+  source:
+    repoURL: 'https://github.com/AkshaySingh198/Performance-tracker-resume.git'
+    targetRevision: HEAD
+    path: helm/genai-resume-chart
+    helm:
+      valueFiles:
+        - values.yaml
+
+  # Destination: Deploy into your local Kubernetes cluster in the 'resume' namespace
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: resume
+
+  # Synchronization Policy: Automated Sync & Self-Healing
+  syncPolicy:
+    automated:
+      prune: true        # Automatically delete K8s resources removed from Git
+      selfHeal: true     # Automatically fix configuration drift if someone manually alters K8s
+    syncOptions:
+      - CreateNamespace=true
