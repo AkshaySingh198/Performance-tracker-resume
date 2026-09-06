@@ -22,9 +22,9 @@ backend:
   enabled: true
   replicaCount: 1
   image:
-    repository: akshaysingh198/genai-resume-backend
+    repository: genai-resume-backend
     tag: latest
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   service:
     name: backend-service
     port: 3000
@@ -48,9 +48,9 @@ frontend:
   enabled: true
   replicaCount: 1
   image:
-    repository: akshaysingh198/genai-resume-frontend
+    repository: genai-resume-frontend
     tag: latest
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   service:
     name: frontend-service
     port: 80
