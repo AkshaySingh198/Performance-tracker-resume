@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: resume-backend
-        image: genai-resume-backend:latest
-        imagePullPolicy: IfNotPresent
+        image: akshaydocker198/genai-resume-backend:latest
+        imagePullPolicy: Always
         resources:
           requests:
             memory: "256Mi"

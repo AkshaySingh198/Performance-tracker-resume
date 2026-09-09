@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: resume-frontend
-        image: akshaysingh198/genai-resume-frontend:latest
+        image: akshaydocker198/genai-resume-frontend:latest
         imagePullPolicy: Always
         resources:
           requests:
