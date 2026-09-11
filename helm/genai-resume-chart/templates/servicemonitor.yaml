@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-servicemonitor
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    release: prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: backend-service
+  endpoints:
+  - port: "3000"
+    path: /metrics
+    interval: 15s
