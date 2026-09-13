@@ -27,7 +27,7 @@ data:
               "datasource": { "type": "prometheus", "uid": "prometheus" },
               "editorMode": "code",
               "expr": "sum(rate(http_requests_total[1m])) by (route, method)",
-              "legendFormat": "{{method}} {{route}}",
+              "legendFormat": "{{ `{{method}} {{route}}` }}",
               "range": true,
               "refId": "A"
             }
@@ -44,7 +44,7 @@ data:
               "datasource": { "type": "prometheus", "uid": "prometheus" },
               "editorMode": "code",
               "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[1m])) by (le, route))",
-              "legendFormat": "p95 - {{route}}",
+              "legendFormat": "p95 - {{ `{{route}}` }}",
               "range": true,
               "refId": "A"
             }
