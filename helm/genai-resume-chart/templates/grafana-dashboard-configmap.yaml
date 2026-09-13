@@ -54,7 +54,7 @@ data:
           "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
           "id": 3,
           "title": "Error Rate Percentage (4xx / 5xx)",
-          "type": "stat",
+          "type": "gauge",
           "datasource": { "type": "prometheus", "uid": "prometheus" },
           "targets": [
             {
