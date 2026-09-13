@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: genai-resume-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  genai-resume-dashboard.json: |-
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+          "id": 1,
+          "title": "Traffic (HTTP Requests / sec)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "editorMode": "code",
+              "expr": "sum(rate(http_requests_total[1m])) by (route, method)",
+              "legendFormat": "{{method}} {{route}}",
+              "range": true,
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+          "id": 2,
+          "title": "Latency (p95 Response Time in Seconds)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "editorMode": "code",
+              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[1m])) by (le, route))",
+              "legendFormat": "p95 - {{route}}",
+              "range": true,
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+          "id": 3,
+          "title": "Error Rate Percentage (4xx / 5xx)",
+          "type": "stat",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "editorMode": "code",
+              "expr": "(sum(rate(http_requests_total{code=~\"[45]..\"}[1m])) / sum(rate(http_requests_total[1m]))) * 100",
+              "legendFormat": "Error %",
+              "range": true,
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+          "id": 4,
+          "title": "Saturation (Node.js Event Loop Lag)",
+          "type": "timeseries",
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "targets": [
+            {
+              "datasource": { "type": "prometheus", "uid": "prometheus" },
+              "editorMode": "code",
+              "expr": "nodejs_eventloop_lag_seconds",
+              "legendFormat": "Event Loop Lag (s)",
+              "range": true,
+              "refId": "A"
+            }
+          ]
+        },
+        {
+          "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+          "id": 5,
+          "title": "Live Pod Logs (Loki)",
+          "type": "logs",
+          "datasource": { "type": "loki", "uid": "loki" },
+          "targets": [
+            {
+              "datasource": { "type": "loki", "uid": "loki" },
+              "editorMode": "code",
+              "expr": "{namespace=\"resume\"}",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ]
+        }
+      ],
+      "refresh": "5s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["genai-resume", "4-golden-signals"],
+      "time": { "from": "now-15m", "to": "now" },
+      "timepicker": {},
+      "timezone": "browser",
+      "title": "GenAi Resume ",
+      "uid": "genai-resume-overview"
+    }
