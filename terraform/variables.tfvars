@@ -1,0 +1,5 @@
+environment     = "dev"
+namespace       = "resume"
+helm_chart_path = "../helm/genai-resume-chart"
+backend_image   = "akshaydocker198/genai-resume-backend"
+frontend_image  = "akshaydocker198/genai-resume-frontend"
